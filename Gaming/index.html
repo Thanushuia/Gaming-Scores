@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaming Score Calculator</title>
+    <style>
+        body {
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+            background-image: url("game.jpg");
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 600px;
+            background: rgba(227, 79, 148, 0.796);
+            padding: 20px;
+            box-shadow: 0 0 50px white;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .player {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        .player input {
+            width: 80%;
+            padding: 5px;
+        }
+        .player button {
+            width: 20%;
+            padding: 5px;
+            background-color: #0f9ff1;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .player button:hover {
+            background-color: #218838;
+        }
+        .result {
+            margin-top: 20px;
+            text-align: left;
+            color: white;
+        }
+        .result p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Gaming Score Calculator</h1>
+        <div id="players">
+            <div class="player">
+                <input type="text" placeholder="Player Name" />
+                <input type="number" placeholder="Score" />
+                <button onclick="removePlayer(this)">Remove</button>
+            </div>
+        </div>
+        <button onclick="addPlayer()">Add Player</button>
+        <button onclick="calculateAverage()">Calculate Average</button>
+        <div class="result" id="result"></div>
+    </div>
+    <script>
+        function addPlayer() {
+            const playersDiv = document.getElementById('players');
+            const newPlayerDiv = document.createElement('div');
+            newPlayerDiv.className = 'player';
+            newPlayerDiv.innerHTML = `
+                <input type="text" placeholder="Player Name" />
+                <input type="number" placeholder="Score" />
+                <button onclick="removePlayer(this)">Remove</button>
+            `;
+            playersDiv.appendChild(newPlayerDiv);
+        }
+
+        function removePlayer(button) {
+            const playerDiv = button.parentElement;
+            playerDiv.remove();
+        }
+
+        function calculateAverage() {
+            const playerDivs = document.querySelectorAll('.player');
+            let totalScore = 0;
+            let playerCount = 0;
+            let playersData = [];
+
+            playerDivs.forEach(playerDiv => {
+                const playerNameInput = playerDiv.querySelector('input[type="text"]');
+                const scoreInput = playerDiv.querySelector('input[type="number"]');
+                const playerName = playerNameInput.value.trim();
+                const score = parseFloat(scoreInput.value);
+                if (playerName !== '' && !isNaN(score)) {
+                    totalScore += score;
+                    playerCount++;
+                    playersData.push({ playerName, score });
+                }
+            });
+
+            const resultDiv = document.getElementById('result');
+            if (playerCount > 0) {
+                const averageScore = totalScore / playerCount;
+                let resultHTML = `<p>Average Score: ${averageScore.toFixed(2)}</p>`;
+                resultHTML += '<p>Player Scores:</p>';
+                playersData.forEach(player => {
+                    resultHTML += `<p>${player.playerName}: ${player.score}</p>`;
+                });
+                resultDiv.innerHTML = resultHTML;
+            } else {
+                resultDiv.textContent = 'Please enter at least one valid player name and score.';
+            }
+        }
+    </script>
+</body>
+</html>
+
